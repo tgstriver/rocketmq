@@ -16,13 +16,14 @@
  */
 package org.apache.rocketmq.common.message;
 
+import org.apache.rocketmq.common.TopicFilterType;
+import org.apache.rocketmq.common.sysflag.MessageSysFlag;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import org.apache.rocketmq.common.TopicFilterType;
-import org.apache.rocketmq.common.sysflag.MessageSysFlag;
 
 public class MessageExt extends Message {
     private static final long serialVersionUID = 5720810158625748049L;
@@ -35,9 +36,17 @@ public class MessageExt extends Message {
 
     private long queueOffset;
     private int sysFlag;
+
+    /**
+     * 消息出生的时间戳，比如当有延迟消息的时候，那么这个时间戳就是消息刚被写入broker的时间
+     * 当延迟时间到达后，消息就会被写到用户设置的真实的topic中，那么写入真实topic的时间戳就是storeTimestamp
+     */
     private long bornTimestamp;
     private SocketAddress bornHost;
 
+    /**
+     * 消息写入到真实topic的时间戳
+     */
     private long storeTimestamp;
     private SocketAddress storeHost;
     private String msgId;

@@ -1,23 +1,5 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.apache.rocketmq.common;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import org.apache.rocketmq.common.annotation.ImportantField;
 import org.apache.rocketmq.common.constant.LoggerName;
 import org.apache.rocketmq.common.constant.PermName;
@@ -25,6 +7,9 @@ import org.apache.rocketmq.common.topic.TopicValidator;
 import org.apache.rocketmq.logging.InternalLogger;
 import org.apache.rocketmq.logging.InternalLoggerFactory;
 import org.apache.rocketmq.remoting.common.RemotingUtil;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class BrokerConfig {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.COMMON_LOGGER_NAME);
@@ -159,20 +144,19 @@ public class BrokerConfig {
     private int registerNameServerPeriod = 1000 * 30;
 
     /**
-     * The minimum time of the transactional message  to be checked firstly, one message only exceed this time interval
-     * that can be checked.
+     * 事务消息将在该参数设置的特定时间之后被检查
      */
     @ImportantField
     private long transactionTimeOut = 6 * 1000;
 
     /**
-     * The maximum number of times the message was checked, if exceed this value, this message will be discarded.
+     * 事务消息被检查的最大次数，如果超过该值，那么这条消息将被丢弃
      */
     @ImportantField
     private int transactionCheckMax = 15;
 
     /**
-     * Transaction message check interval.
+     * 检查事务消息的间隔时间(默认1分钟)
      */
     @ImportantField
     private long transactionCheckInterval = 60 * 1000;

@@ -16,6 +16,12 @@
  */
 package org.apache.rocketmq.common;
 
+import org.apache.rocketmq.common.annotation.ImportantField;
+import org.apache.rocketmq.common.constant.LoggerName;
+import org.apache.rocketmq.common.help.FAQUrl;
+import org.apache.rocketmq.logging.InternalLogger;
+import org.apache.rocketmq.logging.InternalLoggerFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,11 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
-import org.apache.rocketmq.common.annotation.ImportantField;
-import org.apache.rocketmq.common.constant.LoggerName;
-import org.apache.rocketmq.common.help.FAQUrl;
-import org.apache.rocketmq.logging.InternalLogger;
-import org.apache.rocketmq.logging.InternalLoggerFactory;
 
 public class MixAll {
     public static final String ROCKETMQ_HOME_ENV = "ROCKETMQ_HOME";
@@ -115,8 +116,7 @@ public class MixAll {
             int split = brokerAddr.lastIndexOf(":");
             String ip = brokerAddr.substring(0, split);
             String port = brokerAddr.substring(split + 1);
-            String brokerAddrNew = ip + ":" + (Integer.parseInt(port) - 2);
-            return brokerAddrNew;
+            return ip + ":" + (Integer.parseInt(port) - 2);
         } else {
             return brokerAddr;
         }
