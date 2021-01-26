@@ -54,7 +54,7 @@ public class MessageExt extends Message {
     private int bodyCRC;
 
     /**
-     * 消息被重新消费时的时间戳，比如消费者设置了ConsumeConcurrentlyStatus.RECONSUME_LATER，那么再次消费时就会更新这个属性
+     * 消息被重新消费时的重试次数，比如消费者设置了ConsumeConcurrentlyStatus.RECONSUME_LATER，那么再次消费时就会更新这个属性
      */
     private int reconsumeTimes;
 
