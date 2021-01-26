@@ -71,6 +71,23 @@
                 </plugins>
                 <finalName>rocketmq-${project.version}</finalName>
             </build>
+
+            <repositories>
+                <repository>
+                    <id>local</id>
+                    <url>http://localhost:8081/repository/maven-public/</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>local</id>
+                    <url>http://localhost:8081/repository/maven-public/</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>Codehaus repository</id>
+                    <url>https://repository-master.mulesoft.org/nexus/content/groups/public/</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
 
         <profile>

@@ -60,14 +60,22 @@ public class BrokerConfig {
      */
     private int endTransactionThreadPoolNums = 8 + Runtime.getRuntime().availableProcessors() * 2;
 
+    /**
+     * 每隔5秒持久化一次消费者偏移量
+     */
     private int flushConsumerOffsetInterval = 1000 * 5;
 
     private int flushConsumerOffsetHistoryInterval = 1000 * 60;
 
     @ImportantField
     private boolean rejectTransactionMessage = false;
+
+    /**
+     * 是否从地址服务器获取namesrv地址
+     */
     @ImportantField
     private boolean fetchNamesrvAddrByAddressServer = false;
+
     private int sendThreadPoolQueueCapacity = 10000;
     private int pullThreadPoolQueueCapacity = 100000;
     private int replyThreadPoolQueueCapacity = 10000;

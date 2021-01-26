@@ -136,7 +136,6 @@ public class MixAll {
     }
 
     public static void string2File(final String str, final String fileName) throws IOException {
-
         String tmpFile = fileName + ".tmp";
         string2FileNotSafe(str, tmpFile);
 
@@ -229,7 +228,7 @@ public class MixAll {
     }
 
     public static void printObjectProperties(final InternalLogger logger, final Object object,
-        final boolean onlyImportantField) {
+                                             final boolean onlyImportantField) {
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {
             if (!Modifier.isStatic(field.getModifiers())) {
@@ -311,11 +310,17 @@ public class MixAll {
         return properties;
     }
 
+    /**
+     * 填充属性到指定的对象中
+     *
+     * @param p
+     * @param object
+     */
     public static void properties2Object(final Properties p, final Object object) {
         Method[] methods = object.getClass().getMethods();
         for (Method method : methods) {
             String mn = method.getName();
-            if (mn.startsWith("set")) {
+            if (mn.startsWith("set")) { // 通过setter方法填充
                 try {
                     String tmp = mn.substring(4);
                     String first = mn.substring(3, 4);
@@ -326,21 +331,33 @@ public class MixAll {
                         Class<?>[] pt = method.getParameterTypes();
                         if (pt != null && pt.length > 0) {
                             String cn = pt[0].getSimpleName();
-                            Object arg = null;
-                            if (cn.equals("int") || cn.equals("Integer")) {
-                                arg = Integer.parseInt(property);
-                            } else if (cn.equals("long") || cn.equals("Long")) {
-                                arg = Long.parseLong(property);
-                            } else if (cn.equals("double") || cn.equals("Double")) {
-                                arg = Double.parseDouble(property);
-                            } else if (cn.equals("boolean") || cn.equals("Boolean")) {
-                                arg = Boolean.parseBoolean(property);
-                            } else if (cn.equals("float") || cn.equals("Float")) {
-                                arg = Float.parseFloat(property);
-                            } else if (cn.equals("String")) {
-                                arg = property;
-                            } else {
-                                continue;
+                            Object arg;
+                            switch (cn) {
+                                case "int":
+                                case "Integer":
+                                    arg = Integer.parseInt(property);
+                                    break;
+                                case "long":
+                                case "Long":
+                                    arg = Long.parseLong(property);
+                                    break;
+                                case "double":
+                                case "Double":
+                                    arg = Double.parseDouble(property);
+                                    break;
+                                case "boolean":
+                                case "Boolean":
+                                    arg = Boolean.parseBoolean(property);
+                                    break;
+                                case "float":
+                                case "Float":
+                                    arg = Float.parseFloat(property);
+                                    break;
+                                case "String":
+                                    arg = property;
+                                    break;
+                                default:
+                                    continue;
                             }
                             method.invoke(object, arg);
                         }
