@@ -37,7 +37,6 @@ public class NamesrvStartup {
     }
 
     public static NamesrvController main0(String[] args) {
-
         try {
             NamesrvController controller = createNamesrvController(args);
             start(controller);
@@ -53,9 +52,16 @@ public class NamesrvStartup {
         return null;
     }
 
+    /**
+     * 创建NamesrvController
+     *
+     * @param args
+     * @return
+     * @throws IOException
+     * @throws JoranException
+     */
     public static NamesrvController createNamesrvController(String[] args) throws IOException, JoranException {
         System.setProperty(RemotingCommand.REMOTING_VERSION_KEY, Integer.toString(MQVersion.CURRENT_VERSION));
-        //PackageConflictDetect.detectFastjson();
 
         Options options = ServerUtil.buildCommandlineOptions(new Options());
         commandLine = ServerUtil.parseCmdLine("mqnamesrv", args, buildCommandlineOptions(options), new PosixParser());
@@ -64,10 +70,14 @@ public class NamesrvStartup {
             return null;
         }
 
+        //创建NamesrvConfig
         final NamesrvConfig namesrvConfig = new NamesrvConfig();
+        //创建NettyServerConfig
         final NettyServerConfig nettyServerConfig = new NettyServerConfig();
+        //设置启动端口号
         nettyServerConfig.setListenPort(9876);
-        if (commandLine.hasOption('c')) {
+
+        if (commandLine.hasOption('c')) { // 通过-c参数指定namesrv.properties文件路径
             String file = commandLine.getOptionValue('c');
             if (file != null) {
                 InputStream in = new BufferedInputStream(new FileInputStream(file));
@@ -90,6 +100,7 @@ public class NamesrvStartup {
             System.exit(0);
         }
 
+        // 将命令行中指定的配置填充到NamesrvConfig中
         MixAll.properties2Object(ServerUtil.commandLine2Properties(commandLine), namesrvConfig);
 
         if (null == namesrvConfig.getRocketmqHome()) {
@@ -108,16 +119,16 @@ public class NamesrvStartup {
         MixAll.printObjectProperties(log, namesrvConfig);
         MixAll.printObjectProperties(log, nettyServerConfig);
 
+        //创建NameServerController
         final NamesrvController controller = new NamesrvController(namesrvConfig, nettyServerConfig);
 
-        // remember all configs to prevent discard
+        // 记住所有的配置以防止丢弃
         controller.getConfiguration().registerConfig(properties);
 
         return controller;
     }
 
     public static NamesrvController start(final NamesrvController controller) throws Exception {
-
         if (null == controller) {
             throw new IllegalArgumentException("NamesrvController is null");
         }
@@ -128,12 +139,9 @@ public class NamesrvStartup {
             System.exit(-3);
         }
 
-        Runtime.getRuntime().addShutdownHook(new ShutdownHookThread(log, new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                controller.shutdown();
-                return null;
-            }
+        Runtime.getRuntime().addShutdownHook(new ShutdownHookThread(log, (Callable<Void>) () -> {
+            controller.shutdown();
+            return null;
         }));
 
         controller.start();

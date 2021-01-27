@@ -879,15 +879,12 @@ public class BrokerController {
             this.registerBrokerAll(true, false, true);
         }
 
-        this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    BrokerController.this.registerBrokerAll(true, false, brokerConfig.isForceRegister());
-                } catch (Throwable e) {
-                    log.error("registerBrokerAll Exception", e);
-                }
+        //每隔30s上报Broker信息到NameServer
+        this.scheduledExecutorService.scheduleAtFixedRate(() -> {
+            try {
+                BrokerController.this.registerBrokerAll(true, false, brokerConfig.isForceRegister());
+            } catch (Throwable e) {
+                log.error("registerBrokerAll Exception", e);
             }
         }, 1000 * 10, Math.max(10000, Math.min(brokerConfig.getRegisterNameServerPeriod(), 60000)), TimeUnit.MILLISECONDS);
 
@@ -920,12 +917,18 @@ public class BrokerController {
         doRegisterBrokerAll(true, false, topicConfigSerializeWrapper);
     }
 
+    /**
+     * 注册所有的broker
+     *
+     * @param checkOrderConfig
+     * @param oneway
+     * @param forceRegister
+     */
     public synchronized void registerBrokerAll(final boolean checkOrderConfig, boolean oneway, boolean forceRegister) {
         TopicConfigSerializeWrapper topicConfigWrapper = this.getTopicConfigManager().buildTopicConfigSerializeWrapper();
 
-        if (!PermName.isWriteable(this.getBrokerConfig().getBrokerPermission())
-                || !PermName.isReadable(this.getBrokerConfig().getBrokerPermission())) {
-            ConcurrentHashMap<String, TopicConfig> topicConfigTable = new ConcurrentHashMap<String, TopicConfig>();
+        if (!PermName.isWriteable(this.getBrokerConfig().getBrokerPermission()) || !PermName.isReadable(this.getBrokerConfig().getBrokerPermission())) {
+            ConcurrentHashMap<String, TopicConfig> topicConfigTable = new ConcurrentHashMap<>();
             for (TopicConfig topicConfig : topicConfigWrapper.getTopicConfigTable().values()) {
                 TopicConfig tmp =
                         new TopicConfig(topicConfig.getTopicName(), topicConfig.getReadQueueNums(), topicConfig.getWriteQueueNums(),
