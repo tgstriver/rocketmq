@@ -431,6 +431,7 @@ public class DefaultMessageStore implements MessageStore {
         return putResultFuture;
     }
 
+    @Override
     public CompletableFuture<PutMessageResult> asyncPutMessages(MessageExtBatch messageExtBatch) {
         PutMessageStatus checkStoreStatus = this.checkStoreStatus();
         if (checkStoreStatus != PutMessageStatus.PUT_OK) {

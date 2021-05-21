@@ -42,12 +42,20 @@ public class MessageExt extends Message {
      * 当延迟时间到达后，消息就会被写到用户设置的真实的topic中，那么写入真实topic的时间戳就是storeTimestamp
      */
     private long bornTimestamp;
+
+    /**
+     * 消息出生的地方，即生产者的地址
+     */
     private SocketAddress bornHost;
 
     /**
      * 消息写入到真实topic的时间戳
      */
     private long storeTimestamp;
+
+    /**
+     * 消息写入到真实topic的时候的地址
+     */
     private SocketAddress storeHost;
     private String msgId;
     private long commitLogOffset;

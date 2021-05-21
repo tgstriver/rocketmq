@@ -220,6 +220,7 @@ public class SendMessageProcessorTest {
         assertThat(response[0].getCode()).isEqualTo(ResponseCode.SUCCESS);
 
     }
+
     private RemotingCommand createSendTransactionMsgCommand(int requestCode) {
         SendMessageRequestHeader header = createSendMsgRequestHeader();
         int sysFlag = header.getSysFlag();
@@ -229,7 +230,7 @@ public class SendMessageProcessorTest {
         sysFlag |= MessageSysFlag.TRANSACTION_PREPARED_TYPE;
         header.setSysFlag(sysFlag);
         RemotingCommand request = RemotingCommand.createRequestCommand(requestCode, header);
-        request.setBody(new byte[] {'a'});
+        request.setBody(new byte[]{'a'});
         request.makeCustomHeaderToNet();
         return request;
     }
@@ -252,7 +253,7 @@ public class SendMessageProcessorTest {
         SendMessageRequestHeader requestHeader = createSendMsgRequestHeader();
 
         RemotingCommand request = RemotingCommand.createRequestCommand(requestCode, requestHeader);
-        request.setBody(new byte[] {'a'});
+        request.setBody(new byte[]{'a'});
         request.makeCustomHeaderToNet();
         return request;
     }
